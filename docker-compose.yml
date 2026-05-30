@@ -1,0 +1,17 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./cookies-instagram.txt:/app/cookies-instagram.txt:ro
+      - ./cookies-pinterest.txt:/app/cookies-pinterest.txt:ro
+      - ./cookies-twitter.txt:/app/cookies-twitter.txt:ro
+      - ./.env:/app/.env:ro
+      - ./downloads:/app/downloads
+      - ./gallery-dl.conf:/app/gallery-dl.conf:ro
+    ports:
+      - "8086:8080"
+    restart: unless-stopped
