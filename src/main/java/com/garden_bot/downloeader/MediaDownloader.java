@@ -122,6 +122,7 @@ public class MediaDownloader {
                 "--no-playlist",
                 "--no-check-formats",
                 "--merge-output-format", "mp4",
+                "--no-write-cookies",
                 "-o", downloadPath + "%(id)s.%(ext)s"
         ));
 
@@ -178,13 +179,17 @@ public class MediaDownloader {
                 output.append(line.toLowerCase()).append(" ");
             }
         }
-
         int exitCode = process.waitFor();
+        List<File> files = collectDownloadedFiles();
         if (exitCode != 0) {
+            if (!files.isEmpty()) {
+                log.warn("[{}] Proceso terminó con error pero se encontraron archivos descargados", tool);
+                return files;
+            }
             throw new RuntimeException(tool + " error: " + output);
         }
 
-        return collectDownloadedFiles();
+        return files;
     }
 
 
